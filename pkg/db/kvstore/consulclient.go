@@ -503,7 +503,7 @@ func (c *ConsulClient) Close() {
 	}
 }
 
-func (c *ConsulClient) AcquireLock(ctx context.Context, lockName string, timeout int) error {
+func (c *ConsulClient) AcquireLock(ctx context.Context, lockName string, timeout time.Duration) error {
 	return nil
 }
 
