@@ -44,7 +44,7 @@ type ConsulClient struct {
 }
 
 // NewConsulClient returns a new client for the Consul KV store
-func NewConsulClient(addr string, timeout int) (*ConsulClient, error) {
+func NewConsulClient(addr string, timeout time.Duration) (*ConsulClient, error) {
 
 	duration := GetDuration(timeout)
 
@@ -76,7 +76,7 @@ func (c *ConsulClient) List(ctx context.Context, key string) (map[string]*KVPair
 	deadline, _ := ctx.Deadline()
 	kv := c.consul.KV()
 	var queryOptions consulapi.QueryOptions
-	queryOptions.WaitTime = GetDuration(deadline.Second())
+	queryOptions.WaitTime = GetDuration(time.Duration(deadline.Second()))
 	// For now we ignore meta data
 	kvps, _, err := kv.List(key, &queryOptions)
 	if err != nil {
@@ -97,7 +97,7 @@ func (c *ConsulClient) Get(ctx context.Context, key string) (*KVPair, error) {
 	deadline, _ := ctx.Deadline()
 	kv := c.consul.KV()
 	var queryOptions consulapi.QueryOptions
-	queryOptions.WaitTime = GetDuration(deadline.Second())
+	queryOptions.WaitTime = GetDuration(time.Duration(deadline.Second()))
 	// For now we ignore meta data
 	kvp, _, err := kv.Get(key, &queryOptions)
 	if err != nil {
@@ -166,7 +166,7 @@ func (c *ConsulClient) deleteSession() {
 	c.session = nil
 }
 
-func (c *ConsulClient) createSession(ttl int64, retries int) (*consulapi.Session, string, error) {
+func (c *ConsulClient) createSession(ttl time.Duration, retries int) (*consulapi.Session, string, error) {
 	session := c.consul.Session()
 	entry := &consulapi.SessionEntry{
 		Behavior: consulapi.SessionBehaviorDelete,
@@ -218,7 +218,7 @@ func isEqual(val1 interface{}, val2 interface{}) bool {
 // defines how long that reservation is valid.  When TTL expires the key is unreserved by the KV store itself.
 // If the key is acquired then the value returned will be the value passed in.  If the key is already acquired
 // then the value assigned to that key will be returned.
-func (c *ConsulClient) Reserve(ctx context.Context, key string, value interface{}, ttl int64) (interface{}, error) {
+func (c *ConsulClient) Reserve(ctx context.Context, key string, value interface{}, ttl time.Duration) (interface{}, error) {
 
 	// Validate that we can create a byte array from the value as consul API expects a byte array
 	var val []byte

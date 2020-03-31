@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+        "time"
 
 	bitmap "github.com/boljen/go-bitmap"
 	"github.com/opencord/voltha-lib-go/v3/pkg/db"
@@ -155,7 +156,7 @@ type PONResourceManager struct {
 	Globalorlocal      string
 }
 
-func newKVClient(storeType string, address string, timeout int) (kvstore.Client, error) {
+func newKVClient(storeType string, address string, timeout time.Duration) (kvstore.Client, error) {
 	logger.Infow("kv-store-type", log.Fields{"store": storeType})
 	switch storeType {
 	case "consul":

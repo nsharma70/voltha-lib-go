@@ -20,13 +20,13 @@ import (
 	"time"
 )
 
-// GetDuration converts a timeout value from int to duration.  If the timeout value is
+// GetDuration returns the timeout value.  If the timeout value is
 // either not set of -ve then we default KV timeout (configurable) is used.
-func GetDuration(timeout int) time.Duration {
+func GetDuration(timeout time.Duration) time.Duration {
 	if timeout <= 0 {
 		return defaultKVGetTimeout * time.Second
 	}
-	return time.Duration(timeout) * time.Second
+	return timeout * time.Second
 }
 
 // ToString converts an interface value to a string.  The interface should either be of
