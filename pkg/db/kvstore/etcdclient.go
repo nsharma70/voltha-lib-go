@@ -41,11 +41,10 @@ type EtcdClient struct {
 
 // NewEtcdClient returns a new client for the Etcd KV store
 func NewEtcdClient(addr string, timeout time.Duration) (*EtcdClient, error) {
-	duration := GetDuration(timeout)
 
 	c, err := v3Client.New(v3Client.Config{
 		Endpoints:   []string{addr},
-		DialTimeout: duration,
+		DialTimeout: timeout,
 	})
 	if err != nil {
 		logger.Error(err)

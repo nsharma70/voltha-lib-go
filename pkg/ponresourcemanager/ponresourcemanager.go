@@ -125,7 +125,7 @@ const (
 	POOL            = "pool"
 	NUM_OF_PON_INTF = 16
 
-	KVSTORE_RETRY_TIMEOUT = 5
+	KVSTORE_RETRY_TIMEOUT = 5 * time.Second
 	//Path on the KV store for storing reserved gem ports
 	//Format: reserved_gemport_ids
 	RESERVED_GEMPORT_IDS_PATH = "reserved_gemport_ids"

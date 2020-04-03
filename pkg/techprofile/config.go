@@ -29,7 +29,7 @@ const (
 	defaultGemportsCount          = 1
 	defaultPbits                  = "0b11111111"
 
-	defaultKVStoreTimeout = 5 //in seconds
+	defaultKVStoreTimeout = 5 * time.Second //in seconds
 
 	// Tech profile path prefix in kv store
 	defaultKVPathPrefix = "service/voltha/technology_profiles"

@@ -46,11 +46,9 @@ type ConsulClient struct {
 // NewConsulClient returns a new client for the Consul KV store
 func NewConsulClient(addr string, timeout time.Duration) (*ConsulClient, error) {
 
-	duration := GetDuration(timeout)
-
 	config := consulapi.DefaultConfig()
 	config.Address = addr
-	config.WaitTime = duration
+	config.WaitTime = timeout
 	consul, err := consulapi.NewClient(config)
 	if err != nil {
 		logger.Error(err)
@@ -76,7 +74,7 @@ func (c *ConsulClient) List(ctx context.Context, key string) (map[string]*KVPair
 	deadline, _ := ctx.Deadline()
 	kv := c.consul.KV()
 	var queryOptions consulapi.QueryOptions
-	queryOptions.WaitTime = GetDuration(time.Duration(deadline.Second()))
+	queryOptions.WaitTime = deadline * time.Second
 	// For now we ignore meta data
 	kvps, _, err := kv.List(key, &queryOptions)
 	if err != nil {
@@ -97,7 +95,7 @@ func (c *ConsulClient) Get(ctx context.Context, key string) (*KVPair, error) {
 	deadline, _ := ctx.Deadline()
 	kv := c.consul.KV()
 	var queryOptions consulapi.QueryOptions
-	queryOptions.WaitTime = GetDuration(time.Duration(deadline.Second()))
+	queryOptions.WaitTime = deadline * time.Second
 	// For now we ignore meta data
 	kvp, _, err := kv.Get(key, &queryOptions)
 	if err != nil {
@@ -432,10 +430,9 @@ func (c *ConsulClient) listenForKeyChange(watchContext context.Context, key stri
 	logger.Debugw("start-watching-channel", log.Fields{"key": key, "channel": ch})
 
 	defer c.CloseWatch(key, ch)
-	duration := GetDuration(defaultKVGetTimeout)
 	kv := c.consul.KV()
 	var queryOptions consulapi.QueryOptions
-	queryOptions.WaitTime = duration
+	queryOptions.WaitTime = defaultKVGetTimeout
 
 	// Get the existing value, if any
 	previousKVPair, meta, err := kv.Get(key, &queryOptions)
