@@ -15,10 +15,7 @@
  */
 package kvstore
 
-import (
-	"fmt"
-	"time"
-)
+import "fmt"
 
 // GetDuration converts a timeout value from int to duration.  If the timeout value is
 // either not set of -ve then we default KV timeout (configurable) is used.

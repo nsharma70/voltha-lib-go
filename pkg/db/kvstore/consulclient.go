@@ -74,7 +74,7 @@ func (c *ConsulClient) List(ctx context.Context, key string) (map[string]*KVPair
 	deadline, _ := ctx.Deadline()
 	kv := c.consul.KV()
 	var queryOptions consulapi.QueryOptions
-	queryOptions.WaitTime = deadline * time.Second
+	queryOptions.WaitTime = time.Duration(deadline.Second()) * time.Second
 	// For now we ignore meta data
 	kvps, _, err := kv.List(key, &queryOptions)
 	if err != nil {
@@ -95,7 +95,7 @@ func (c *ConsulClient) Get(ctx context.Context, key string) (*KVPair, error) {
 	deadline, _ := ctx.Deadline()
 	kv := c.consul.KV()
 	var queryOptions consulapi.QueryOptions
-	queryOptions.WaitTime = deadline * time.Second
+	queryOptions.WaitTime = time.Duration(deadline.Second()) * time.Second
 	// For now we ignore meta data
 	kvp, _, err := kv.Get(key, &queryOptions)
 	if err != nil {
