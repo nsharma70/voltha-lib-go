@@ -20,7 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"sync"
-        "time"
+	"time"
 
 	"github.com/opencord/voltha-lib-go/v3/pkg/log"
 	v3Client "go.etcd.io/etcd/clientv3"
@@ -168,7 +168,7 @@ func (c *EtcdClient) Reserve(ctx context.Context, key string, value interface{},
 		return nil, fmt.Errorf("unexpected-type%T", value)
 	}
 
-	resp, err := c.ectdAPI.Grant(ctx, int64(ttl))
+	resp, err := c.ectdAPI.Grant(ctx, int64(ttl.Seconds()))
 	if err != nil {
 		logger.Error(err)
 		return nil, err

@@ -19,6 +19,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	log "github.com/opencord/voltha-lib-go/v3/pkg/log"
 	"sync"
 	"time"
@@ -74,7 +75,9 @@ func (c *ConsulClient) List(ctx context.Context, key string) (map[string]*KVPair
 	deadline, _ := ctx.Deadline()
 	kv := c.consul.KV()
 	var queryOptions consulapi.QueryOptions
-	queryOptions.WaitTime = time.Duration(deadline.Second()) * time.Second
+	// Substract current time from deadline to get the waitTime duration
+	queryOptions.WaitTime = deadline.Sub(time.Now())
+
 	// For now we ignore meta data
 	kvps, _, err := kv.List(key, &queryOptions)
 	if err != nil {
@@ -95,7 +98,9 @@ func (c *ConsulClient) Get(ctx context.Context, key string) (*KVPair, error) {
 	deadline, _ := ctx.Deadline()
 	kv := c.consul.KV()
 	var queryOptions consulapi.QueryOptions
-	queryOptions.WaitTime = time.Duration(deadline.Second()) * time.Second
+	// Substract current time from deadline to get the waitTime duration
+	queryOptions.WaitTime = deadline.Sub(time.Now())
+
 	// For now we ignore meta data
 	kvp, _, err := kv.Get(key, &queryOptions)
 	if err != nil {
@@ -168,7 +173,7 @@ func (c *ConsulClient) createSession(ttl time.Duration, retries int) (*consulapi
 	session := c.consul.Session()
 	entry := &consulapi.SessionEntry{
 		Behavior: consulapi.SessionBehaviorDelete,
-		TTL:      "10s", // strconv.FormatInt(ttl, 10) + "s", // disable ttl
+		TTL:      fmt.Sprint(ttl),
 	}
 
 	for {

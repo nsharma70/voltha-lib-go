@@ -31,7 +31,7 @@ import (
 
 const (
 	embedEtcdServerHost = "localhost"
-	defaultTimeout      = 1 * time.Second
+	defaultTimeout      = time.Duration(1) * time.Second
 	defaultPathPrefix   = "Prefix"
 )
 

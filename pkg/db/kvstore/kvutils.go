@@ -17,15 +17,6 @@ package kvstore
 
 import "fmt"
 
-// GetDuration converts a timeout value from int to duration.  If the timeout value is
-// either not set of -ve then we default KV timeout (configurable) is used.
-//func GetDuration(timeout int) time.Duration {
-//	if timeout <= 0 {
-//		return defaultKVGetTimeout
-//	}
-//	return time.Duration(timeout) * time.Second
-//}
-
 // ToString converts an interface value to a string.  The interface should either be of
 // a string type or []byte.  Otherwise, an error is returned.
 func ToString(value interface{}) (string, error) {

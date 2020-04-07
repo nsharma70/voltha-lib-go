@@ -23,7 +23,7 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
-        "time"
+	"time"
 
 	"github.com/opencord/voltha-lib-go/v3/pkg/db"
 

@@ -17,7 +17,7 @@ package techprofile
 
 import (
 	"github.com/opencord/voltha-lib-go/v3/pkg/db"
-        "time"
+	"time"
 )
 
 // tech profile default constants
@@ -29,7 +29,7 @@ const (
 	defaultGemportsCount          = 1
 	defaultPbits                  = "0b11111111"
 
-	defaultKVStoreTimeout = 5 * time.Second //in seconds
+	defaultKVStoreTimeout = time.Duration(5) * time.Second //in seconds
 
 	// Tech profile path prefix in kv store
 	defaultKVPathPrefix = "service/voltha/technology_profiles"
