@@ -16,6 +16,7 @@
 package kvstore
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -79,4 +80,34 @@ func TestToStringForErrorCase(t *testing.T) {
 
 	assert.Equal(t, expectedResult, actualResult)
 	assert.NotEqual(t, error, nil)
+}
+
+func TestToValidateAddressWithValidFormat(t *testing.T) {
+	actualResult := ValidateAddress("localhost:8080")
+	assert.Equal(t, nil, actualResult)
+}
+
+func TestToValidateAddressWithInvalidFormat(t *testing.T) {
+	actualResult := ValidateAddress("a.b.0.1::::::")
+	var expectedResult = fmt.Errorf("Invalid Format of address")
+	assert.Equal(t, expectedResult, actualResult)
+}
+
+func TestToValidateAddressWithInvalidHost(t *testing.T) {
+	address := "a:8080"
+	actualResult := ValidateAddress(address)
+	var expectedResult = fmt.Errorf("Unknown host")
+	assert.Equal(t, expectedResult, actualResult)
+}
+
+func TestToValidateAddressWithInvalidPort(t *testing.T) {
+	actualResult := ValidateAddress("127.0.0.1:5ax65")
+	var expectedResult = fmt.Errorf("Invalid address port")
+	assert.Equal(t, expectedResult, actualResult)
+}
+
+func TestToValidateAddressWithInvalidPortRange(t *testing.T) {
+	actualResult := ValidateAddress("127.0.0.1:65539")
+	var expectedResult = fmt.Errorf("Invalid address port range")
+	assert.Equal(t, expectedResult, actualResult)
 }

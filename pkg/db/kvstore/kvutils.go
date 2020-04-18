@@ -16,7 +16,10 @@
 package kvstore
 
 import (
+	"errors"
 	"fmt"
+	"net"
+	"strconv"
 	"time"
 )
 
@@ -53,4 +56,33 @@ func ToByte(value interface{}) ([]byte, error) {
 	default:
 		return nil, fmt.Errorf("unexpected-type-%T", t)
 	}
+}
+
+// GetAddress concatenates the Host and Port as single arguement.
+func GetAddress(host string, port int) string {
+	addr := host + ":" + strconv.Itoa(port)
+	return addr
+}
+
+// ValidateAddress validates the host and port values
+func ValidateAddress(address string) error {
+	host, port, err := net.SplitHostPort(address)
+	if err != nil {
+		return errors.New("Invalid Format of address")
+	}
+
+	ip, err := net.LookupIP(host)
+	if err != nil || len(ip) == 0 {
+		return errors.New("Unknown host")
+	}
+
+	portInt, errValue := strconv.Atoi(port)
+	if errValue != nil {
+		return errors.New("Invalid address port")
+	}
+
+	if !(portInt <= 65535 && portInt >= 0) {
+		return errors.New("Invalid address port range")
+	}
+	return nil
 }
